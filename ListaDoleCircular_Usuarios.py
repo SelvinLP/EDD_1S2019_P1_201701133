@@ -49,6 +49,27 @@ class ListaDoblementeEnlazada_U():
         self.primero=aux
         self.size-=1
 
+    def Buscar(self,posicion):
+        aux=self.primero
+        if(posicion>self.size):
+            posicion=posicion-self.size-1
+        if(posicion<0):
+            posicion=-posicion
+        cont=0
+        while(cont!=-1):
+            if(cont==posicion):
+                cont=-1
+                return aux.NombreUsu
+            else:
+                if(cont==self.size):
+                    cont=0
+                    aux=self.primero
+                else:
+                    cont +=1
+                    aux=aux.siguiente
+
+
+
     def Graficar(self):
         CadenaImprimir = "digraph List { rankdir=LR "
         aux = self.primero
@@ -84,4 +105,4 @@ class ListaDoblementeEnlazada_U():
         ListaDoblementeEnlazada_U.ContadorDocumentos += 1
 
 
-        print(CadenaImprimir)
+
