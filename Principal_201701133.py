@@ -1,5 +1,6 @@
 #Librerias
 import csv
+import random
 import curses
 from curses import KEY_RIGHT, KEY_LEFT, KEY_UP, KEY_DOWN #import special KEYS from the curses library
 import subprocess
@@ -7,6 +8,9 @@ import os
 #Instancias de Clases
 from ListaDoleCircular_Usuarios import  ListaDoblementeEnlazada_U
 from ListaDoble_Serpiente import ListaDoblementeEnlazada_S
+from Pila_Bocadillos import  Pila_Bocadillo
+from Pila_Bocadillos import  Bloque
+Pila_Bocad=Pila_Bocadillo()
 ListaSerpienet=ListaDoblementeEnlazada_S()
 ListaUsuarios=ListaDoblementeEnlazada_U()
 
@@ -14,10 +18,14 @@ ListaUsuarios=ListaDoblementeEnlazada_U()
 OpcionReportes=0
 UsuarioSeleccionado=""
 opcion =0
+#Variables de la serpiente
+TamanioSer=3
+ExisteBocadillo=0
 #Metodos de Curses
-
 stdscr = curses.initscr()
-window = curses.newwin(20,70,0,0)
+TamañoTablero_y=20
+TamañoTablero_x=70
+window = curses.newwin(TamañoTablero_y,TamañoTablero_x,0,0)
 window.keypad(True)
 curses.noecho()
 curses.curs_set(0)
@@ -52,14 +60,26 @@ def Pintado_Titulo(Vent,cadena):
 #Muestra Pantalla
 Pintado_Menu(window)
 
+#instancia de valores iniciales del juego
+Pos_x = 5
+Pos_y = 5
+ListaSerpienet.Insertar_Final(Pos_x, Pos_y)
+ListaSerpienet.Insertar_Final(Pos_x - 1, Pos_y)
+ListaSerpienet.Insertar_Final(Pos_x - 2, Pos_y)
+
+
 #Ciclo de Opciones
 while opcion==0:
     opcion= window.getch()
+    #posicion inicial de la serpiente
+    Pos_x = 5
+    Pos_y = 5
     if(opcion==49):#opcion 1
+        Movimiento = KEY_RIGHT
         Pintado_Titulo(window," PLAY ")
         if(UsuarioSeleccionado==""):
             window.addstr(5, 21, "INGRESE UN USUARIO")
-            NombreU = window.getstr(0, 0, 20)
+            NombreU = window.getstr(1, 0, 20)
             window.addstr(5,21,"Usuario Creado: ")
             window.addstr(5, 38, NombreU)
             ListaUsuarios.Insertar_Final(NombreU)
@@ -67,29 +87,93 @@ while opcion==0:
             Pintado_Titulo(window, " PLAY ")
         #Fin Creacion de Usuario
 
-        #Creacion del tablero
 
-        window.addch(Pos_y, Pos_x, '*') #Posicion Inicial
         #Ciclo Principal
-        while(Movimiento!=8):
-            window.timeout(100)
+        while(Movimiento!=32):
+            window.timeout(150)
+            #Limites del tablero
+            if(Pos_y==TamañoTablero_y-1):
+                Pos_y=1
+            if(Pos_y==0):
+                Pos_y=TamañoTablero_y-1
+            if (Pos_x == TamañoTablero_x-1):
+                Pos_x = 1
+            if (Pos_x == 0):
+                Pos_x = TamañoTablero_x - 1
+            window.border(0)
+            posicion_x = round((60 - len("SNAKE RELOADED")) / 2)
+            window.addstr(0, posicion_x, "SNAKE RELOADED")
+
+            # creacion de los bocadillos
+            if(ExisteBocadillo==0):
+                EleccionBocadillo = random.randint(0, 2)
+                PosBocadillo_x = random.randint(2,TamañoTablero_x-2)
+                PosBocadillo_y =random.randint(2,TamañoTablero_y-2)
+                print(EleccionBocadillo)
+                if (EleccionBocadillo == 0):
+                    # realiza un push
+                    window.addch(PosBocadillo_y,PosBocadillo_x,'+')
+                    ExisteBocadillo=1
+                else:
+                    #realiza un pop
+                    window.addch(PosBocadillo_y,PosBocadillo_x,'*')
+                    ExisteBocadillo=1
+
+
+
             NuevoMovimiento=window.getch()
             if(NuevoMovimiento is not -1):
                 Movimiento=NuevoMovimiento
-
-            window.addch(Pos_y, Pos_x, ' ')  # Es el que borra
+            #Borrado
+            for i in range(ListaSerpienet.Tamaño() + 1):
+                Pos_yb = ListaSerpienet.Obtener_Pos_y(i)
+                Pos_xb = ListaSerpienet.Obtener_Pos_x(i)
+                window.addch(Pos_yb, Pos_xb, ' ')  # Es el que borra
+            #Fin Borrado
             # Movimientos
             if Movimiento == KEY_RIGHT:
                 Pos_x = Pos_x + 1
-            elif Movimiento == KEY_LEFT:  # left direction
-                Pos_x = Pos_x - 1  # pos_x decrease
-            elif Movimiento == KEY_UP:  # up direction
-                Pos_y = Pos_y - 1  # pos_y decrease
-            elif Movimiento == KEY_DOWN:  # down direction
+                ListaSerpienet.ActualizarPos_A(Pos_x, Pos_y)
+            elif Movimiento == KEY_LEFT:
+                Pos_x = Pos_x - 1
+                ListaSerpienet.ActualizarPos_A(Pos_x, Pos_y)
+            elif Movimiento == KEY_UP:
+                Pos_y = Pos_y - 1
+                ListaSerpienet.ActualizarPos_A(Pos_x, Pos_y)
+            elif Movimiento == KEY_DOWN:
                 Pos_y = Pos_y + 1
-            window.addch(Pos_y, Pos_x, '*')
+                ListaSerpienet.ActualizarPos_A(Pos_x, Pos_y)
+
+            #si toca un bocadillo
+            if (Pos_x == PosBocadillo_x and Pos_y == PosBocadillo_y):
+                CadenaInsertar=Bloque()
+                CadenaInsertar.Dar_Valor([PosBocadillo_x,PosBocadillo_y])
+                if (EleccionBocadillo == 0):
+                    # realiza un push
+                    Pila_Bocad.Insertar(CadenaInsertar)
+                    ListaSerpienet.Insertar_Final(PosBocadillo_x, PosBocadillo_y)
+                else:
+                    #realiza un pop
+                    if(ListaSerpienet.Tamaño()<2):
+                        Pila_Bocad.Eliminar()
+                    else:
+                        if(Pila_Bocad.Obtener_Tamaño()==0):
+                            ListaSerpienet.Eliminar()
+                        else:
+                            Pila_Bocad.Eliminar()
+
+
+
+                ExisteBocadillo = 0
+            #impresion de Gusano
+            for i in range(ListaSerpienet.Tamaño() + 1):
+                Pos_yb = ListaSerpienet.Obtener_Pos_y(i)
+                Pos_xb = ListaSerpienet.Obtener_Pos_x(i)
+                window.addch(Pos_yb, Pos_xb, '#')  # Es el que borra
+            # Fin de Impresion de Gusano
 
                     #Fin de Inicio de Juego
+        ListaSerpienet.Imprimir()
         Espera_Salir(window)
         Pintado_Menu(window)
         opcion=0
@@ -145,13 +229,13 @@ while opcion==0:
         window.addstr(10, 21, '4. USERS REPORT')
 
         OpcionReportes=window.getch()
-        if(opcion==49):
+        if(OpcionReportes==49):
+            ListaSerpienet.Graficar()
+        elif(OpcionReportes==50):
             print()
-        elif(opcion==50):
-            print()
-        elif(opcion==51):
+        elif(OpcionReportes==51):
             print("")
-        elif(opcion==52):
+        elif(OpcionReportes==52):
             ListaUsuarios.Graficar()
         else:
             window.addstr(11, 21, 'Opcion Incorrecta')
@@ -187,7 +271,6 @@ while opcion==0:
                         # ListaUsuarios.Insertar_Final(linea)
                         ListaUsuarios.Insertar_Final(f.readline())
                 ListaUsuarios.Eliminar()
-                ListaUsuarios.Imprimir()
             elif(nombrecorrecto==50):
                 nombrecorrecto=50
         window.addstr(12, 21, 'Presione DELETE para salir')

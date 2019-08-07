@@ -51,10 +51,10 @@ class ListaDoblementeEnlazada_U():
 
     def Buscar(self,posicion):
         aux=self.primero
-        if(posicion>self.size):
-            posicion=posicion-self.size-1
-        if(posicion<0):
+        while(posicion<0):
             posicion=-posicion
+        while(posicion>self.size):
+            posicion = posicion - self.size - 1
         cont=0
         while(cont!=-1):
             if(cont==posicion):
@@ -78,20 +78,30 @@ class ListaDoblementeEnlazada_U():
         CadenaImprimir = CadenaImprimir + " " +'"'+ str(aux.NombreUsu) +'"'+  " [shape=box] "
         CadenaSig = CadenaSig + " " +'"'+  str(aux.NombreUsu)+'"'
         aux=aux.siguiente
-        while aux is not self.primero:
-            CadenaImprimir = CadenaImprimir + " " +'"'+  str(aux.NombreUsu) +'"'+  " [shape=box] "
-            CadenaSig = CadenaSig +" -> " +'"'+  str(aux.NombreUsu)+'"'+ " "
-            aux = aux.siguiente
-        CadenaSig=CadenaSig +" -> " +'"'+  str(self.primero.NombreUsu)+'"'+ " "
+        if(self.size!=0):
+            if(self.size==1):
+                CadenaAnt = CadenaAnt + " " + '"' + str(self.ultimo.NombreUsu) + '"'
+                CadenaAnt = CadenaAnt + " -> " + '"' + str(self.primero.NombreUsu) + '"' + " "
+                CadenaImprimir = CadenaImprimir + " " + '"' + str(aux.NombreUsu) + '"' + " [shape=box] "
+                CadenaSig = CadenaSig + " -> " + '"' + str(aux.NombreUsu) + '"' + " "
+            else:
+                while aux is not self.primero:
+                    CadenaImprimir = CadenaImprimir + " " + '"' + str(aux.NombreUsu) + '"' + " [shape=box] "
+                    CadenaSig = CadenaSig + " -> " + '"' + str(aux.NombreUsu) + '"' + " "
+                    aux = aux.siguiente
+                CadenaSig = CadenaSig + " -> " + '"' + str(self.primero.NombreUsu) + '"' + " "
 
-        #Ciclo para la otra relacion
-        aux=self.ultimo
-        CadenaAnt=CadenaAnt+ " " +'"'+  str(aux.NombreUsu)+'"'
-        aux=aux.anterior
-        while aux is not self.ultimo:
-            CadenaAnt = CadenaAnt + " -> " +'"'+  str(aux.NombreUsu) +'"'+  " "
-            aux=aux.anterior
-        CadenaAnt=CadenaAnt+" -> " +'"'+  str(self.ultimo.NombreUsu)+'"'+ " "
+                # Ciclo para la otra relacion
+                aux = self.ultimo
+                CadenaAnt = CadenaAnt + " " + '"' + str(aux.NombreUsu) + '"'
+                aux = aux.anterior
+                while aux is not self.ultimo:
+                    CadenaAnt = CadenaAnt + " -> " + '"' + str(aux.NombreUsu) + '"' + " "
+                    aux = aux.anterior
+                CadenaAnt = CadenaAnt + " -> " + '"' + str(self.ultimo.NombreUsu) + '"' + " "
+
+
+
 
         #generacion de documentos
         CadenaImprimir=CadenaImprimir+" "+CadenaSig+'\n'+CadenaAnt+" }"
