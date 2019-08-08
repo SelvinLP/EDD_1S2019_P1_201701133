@@ -31,11 +31,13 @@ class ListaDoblementeEnlazada_S():
             aux.siguiente = nuevaLista
             self.ultimo.anterior=aux
             self.size += 1
+
     def Eliminar(self):
         aux=self.ultimo.anterior
         self.ultimo.anterior = None
         self.ultimo=aux
         self.ultimo.siguiente=None
+        self.size-=1
 
     def Imprimir(self):
         aux = self.primero
@@ -45,6 +47,7 @@ class ListaDoblementeEnlazada_S():
             aux = aux.siguiente
             cont += 1
 
+    1
     def ActualizarPos_A(self,valorx,valory):
         #Inserta al Inicio
         nuevaLista = Nodo(valorx,valory)
@@ -59,6 +62,35 @@ class ListaDoblementeEnlazada_S():
         self.ultimo.siguiente = None
 
 
+    def Empezar_Nuevo(self):
+        self.primero=None
+        self.ultimo=None
+        self.size=0
+
+    def Reversa(self):
+        cont=0
+        nuevaLista = Nodo(self.primero.PosicionX, self.primero.Posiciony)
+        aux = self.ultimo
+        self.ultimo = nuevaLista
+        aux.siguiente = nuevaLista
+        self.ultimo.anterior = aux
+
+        aux2 = self.primero.siguiente
+        self.primero.siguiente = None
+        aux2.anterior = None
+        self.primero = aux2
+        while cont<self.size:
+            nuevaLista = Nodo(self.primero.PosicionX, self.primero.Posiciony)
+            aux = self.ultimo.anterior
+            
+
+
+            aux2 = self.primero.siguiente
+            self.primero.siguiente=None
+            aux2.anterior = None
+            self.primero=aux2
+
+            cont +=1
 
 
 
@@ -85,16 +117,19 @@ class ListaDoblementeEnlazada_S():
             contador +=1
 
     def Graficar(self):
-        CadenaImprimir="digraph List { rankdir=LR "
-        CadenaImprimir=CadenaImprimir+'"NULL"'+" [shape=box] "
-        CadenaImprimir = CadenaImprimir + '"NULL."' + " [shape=box] "
+        CadenaImprimir="digraph List { rankdir=LR "+'\n'
+        CadenaImprimir=CadenaImprimir+' size="9,9"'+'\n'
+        CadenaImprimir = CadenaImprimir + 'node[shape=record,style=filled] ' + '\n'
+        CadenaImprimir=CadenaImprimir+'"NULL"'+" [shape=box] "+ '\n'
+        CadenaImprimir = CadenaImprimir + '"NULL."' + " [shape=box] "+ '\n'
         aux = self.primero
         CadenaSig=''
         CadenaAnt=''
         #ciclo para los enlaces siguientes
 
         while aux is not None:
-            CadenaImprimir = CadenaImprimir + " " + '"(' +str(aux.PosicionX) +","+str(aux.Posiciony)+ ')"' +" [shape=box] "
+            CadenaImprimir = CadenaImprimir + " " + '"(' +str(aux.PosicionX) +","+str(aux.Posiciony)+ ')"' +'[label ='+'"'+'{'
+            CadenaImprimir= CadenaImprimir+'|'+ '(' +str(aux.PosicionX) +","+str(aux.Posiciony)+ ')' +'|'+'}"]'+ '\n'
             if aux.siguiente is None:
                 CadenaSig=CadenaSig+" "+ '"(' +str(aux.PosicionX) +","+str(aux.Posiciony)+ ')"'
             else:

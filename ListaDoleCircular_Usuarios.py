@@ -71,22 +71,27 @@ class ListaDoblementeEnlazada_U():
 
 
     def Graficar(self):
-        CadenaImprimir = "digraph List { rankdir=LR "
         aux = self.primero
         CadenaSig = ''
         CadenaAnt = ''
-        CadenaImprimir = CadenaImprimir + " " +'"'+ str(aux.NombreUsu) +'"'+  " [shape=box] "
+        CadenaImprimir = "digraph ListaCircular { rankdir=LR " + '\n'
+        CadenaImprimir = CadenaImprimir = CadenaImprimir + ' size="9,9"' + '\n'
+        CadenaImprimir = CadenaImprimir + 'node[shape=record,style=filled] ' + '\n'
+        CadenaImprimir = CadenaImprimir + " " + '"'+ str(aux.NombreUsu)+'"' +'[label ='+'"'+'{'
+        CadenaImprimir = CadenaImprimir + '|'+ str(aux.NombreUsu) + '|' + '}"]' + '\n'
         CadenaSig = CadenaSig + " " +'"'+  str(aux.NombreUsu)+'"'
         aux=aux.siguiente
-        if(self.size!=0):
-            if(self.size==1):
+        if (self.size != 0):
+            if (self.size == 1):
                 CadenaAnt = CadenaAnt + " " + '"' + str(self.ultimo.NombreUsu) + '"'
                 CadenaAnt = CadenaAnt + " -> " + '"' + str(self.primero.NombreUsu) + '"' + " "
-                CadenaImprimir = CadenaImprimir + " " + '"' + str(aux.NombreUsu) + '"' + " [shape=box] "
+                CadenaImprimir = CadenaImprimir + " " + '"' + str(aux.NombreUsu) + '"' + '[label =' + '"' + '{'
+                CadenaImprimir = CadenaImprimir + '|' + str(aux.NombreUsu) + '|' + '}"]' + '\n'
                 CadenaSig = CadenaSig + " -> " + '"' + str(aux.NombreUsu) + '"' + " "
             else:
                 while aux is not self.primero:
-                    CadenaImprimir = CadenaImprimir + " " + '"' + str(aux.NombreUsu) + '"' + " [shape=box] "
+                    CadenaImprimir = CadenaImprimir + " " + '"' + str(aux.NombreUsu) + '"' + '[label =' + '"' + '{'
+                    CadenaImprimir = CadenaImprimir + '|' + str(aux.NombreUsu) + '|' + '}"]' + '\n'
                     CadenaSig = CadenaSig + " -> " + '"' + str(aux.NombreUsu) + '"' + " "
                     aux = aux.siguiente
                 CadenaSig = CadenaSig + " -> " + '"' + str(self.primero.NombreUsu) + '"' + " "

@@ -1,0 +1,8 @@
+digraph List { rankdir=LR 
+ size="9,9"
+node[shape=record,style=filled] 
+"NULL" [shape=box] 
+ "(b's',2)"[label ="{(b's',2)|}"]
+ "(b'Sefundo',1)"[label ="{(b'Sefundo',1)|}"]
+ "(b'Tercero',0)"[label ="{(b'Tercero',0)|}"]
+  "(b's',2)" ->  "(b'Sefundo',1)" ->  "(b'Tercero',0)" -> "NULL"}

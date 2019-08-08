@@ -1,0 +1,6 @@
+digraph ListaCircular { rankdir=LR 
+ size="9,9"
+node[shape=record,style=filled] 
+ "b's'"[label ="{|b's'|}"]
+  "b's'"
+ }
