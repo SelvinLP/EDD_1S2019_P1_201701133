@@ -39,6 +39,18 @@ class ListaDoblementeEnlazada_S():
         self.ultimo.siguiente=None
         self.size-=1
 
+    def ParaTemporal(self,valorx,valory):
+        nuevaLista = Nodo(valorx, valory)
+        if self.vacio():
+            self.primero =self.ultimo = nuevaLista
+        else:
+
+            aux = self.primero
+            self.primero = nuevaLista
+            self.primero.siguiente = aux
+            aux.anterior = self.primero
+            self.size += 1
+
     def Imprimir(self):
         aux = self.primero
         cont = 0
@@ -66,36 +78,6 @@ class ListaDoblementeEnlazada_S():
         self.primero=None
         self.ultimo=None
         self.size=0
-
-    def Reversa(self):
-        cont=0
-        nuevaLista = Nodo(self.primero.PosicionX, self.primero.Posiciony)
-        aux = self.ultimo
-        self.ultimo = nuevaLista
-        aux.siguiente = nuevaLista
-        self.ultimo.anterior = aux
-
-        aux2 = self.primero.siguiente
-        self.primero.siguiente = None
-        aux2.anterior = None
-        self.primero = aux2
-        while cont<self.size:
-            nuevaLista = Nodo(self.primero.PosicionX, self.primero.Posiciony)
-            aux = self.ultimo.anterior
-            
-
-
-            aux2 = self.primero.siguiente
-            self.primero.siguiente=None
-            aux2.anterior = None
-            self.primero=aux2
-
-            cont +=1
-
-
-
-
-
 
 
     def Obtener_Pos_x(self,posicion):

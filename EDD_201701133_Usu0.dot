@@ -1,6 +1,32 @@
 digraph ListaCircular { rankdir=LR 
  size="9,9"
 node[shape=record,style=filled] 
- "b's'"[label ="{|b's'|}"]
-  "b's'"
- }
+ "Usuario 1
+"[label ="{|Usuario 1
+|}"]
+ "Usuario 2
+"[label ="{|Usuario 2
+|}"]
+ "Usuario 3
+"[label ="{|Usuario 3
+|}"]
+ "Usuario 4
+"[label ="{|Usuario 4
+|}"]
+ "Usuario 5
+"[label ="{|Usuario 5
+|}"]
+ "b'Selvin'"[label ="{|b'Selvin'|}"]
+  "Usuario 1
+" -> "Usuario 2
+"  -> "Usuario 3
+"  -> "Usuario 4
+"  -> "Usuario 5
+"  -> "b'Selvin'"  -> "Usuario 1
+" 
+ "b'Selvin'" -> "Usuario 5
+"  -> "Usuario 4
+"  -> "Usuario 3
+"  -> "Usuario 2
+"  -> "Usuario 1
+"  -> "b'Selvin'"  }

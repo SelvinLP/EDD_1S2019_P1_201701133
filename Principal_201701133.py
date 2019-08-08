@@ -39,7 +39,6 @@ Pos_x=5
 Pos_y=5
 velocidad_tiempo=100
 
-
 def Espera_Salir(Vent):
     key = Vent.getch()
     while key!=8:#posicion para retroceder DELETE
@@ -110,127 +109,169 @@ while opcion==0:
         # Fin Creacion de Usuario
         window.clear()
         #Inicio del Movimiento
-        while (Movimiento != 32):
-            window.timeout(velocidad_tiempo)
-            # Limites del tablero
-            if (Pos_y == TamañoTablero_y - 1):
-                Pos_y = 1
-            if (Pos_y == 0):
-                Pos_y = TamañoTablero_y - 1
-            if (Pos_x == TamañoTablero_x - 1):
-                Pos_x = 1
-            if (Pos_x == 0):
-                Pos_x = TamañoTablero_x - 1
-            Pintado_Titulo_Tablero(window, str(Puntuacion), UsuarioSeleccionado)
+        while(Pausa_del_Juego==0):
 
-            # creacion de los bocadillos
-            if (ExisteBocadillo == 0):
-                EleccionBocadillo = random.randint(Nivel, 2)
-                PosBocadillo_x = random.randint(2, TamañoTablero_x - 2)
-                PosBocadillo_y = random.randint(2, TamañoTablero_y - 2)
-                if (EleccionBocadillo == 0 or EleccionBocadillo == 1):
-                    # realiza un push
-                    window.addch(PosBocadillo_y, PosBocadillo_x, '+')
-                    ExisteBocadillo = 1
-                else:
+            while (Movimiento != 32):
+                window.timeout(velocidad_tiempo)
+                # Limites del tablero
+                if (Pos_y == TamañoTablero_y - 1):
+                    Pos_y = 1
+                if (Pos_y == 0):
+                    Pos_y = TamañoTablero_y - 1
+                if (Pos_x == TamañoTablero_x - 1):
+                    Pos_x = 1
+                if (Pos_x == 0):
+                    Pos_x = TamañoTablero_x - 1
+                Pintado_Titulo_Tablero(window, str(Puntuacion), UsuarioSeleccionado)
 
-                    # realiza un pop
-                    window.addch(PosBocadillo_y, PosBocadillo_x, '*')
-                    ExisteBocadillo = 1
+                # creacion de los bocadillos
+                if (ExisteBocadillo == 0):
+                    EleccionBocadillo = random.randint(Nivel, 2)
+                    PosBocadillo_x = random.randint(2, TamañoTablero_x - 2)
+                    PosBocadillo_y = random.randint(2, TamañoTablero_y - 2)
+                    if (EleccionBocadillo == 0 or EleccionBocadillo == 1):
+                        # realiza un push
+                        window.addch(PosBocadillo_y, PosBocadillo_x, '+')
+                        ExisteBocadillo = 1
+                    else:
 
+                        # realiza un pop
+                        window.addch(PosBocadillo_y, PosBocadillo_x, '*')
+                        ExisteBocadillo = 1
 
-            #Bloqueo de movimiento hacia direccion Opuesta
-            NuevoMovimiento = window.getch()
-            Movimiento_Anterior = Movimiento
-            if(Movimiento==KEY_UP and NuevoMovimiento==KEY_DOWN):
-                NuevoMovimiento=Movimiento
-            if (Movimiento == KEY_DOWN and NuevoMovimiento == KEY_UP):
-                NuevoMovimiento = Movimiento
-            if (Movimiento == KEY_RIGHT and NuevoMovimiento == KEY_LEFT):
-                NuevoMovimiento = Movimiento
-            if (Movimiento == KEY_LEFT and NuevoMovimiento == KEY_RIGHT):
-                NuevoMovimiento = Movimiento
+                # Bloqueo de movimiento hacia direccion Opuesta
+                NuevoMovimiento = window.getch()
+                Movimiento_Anterior = Movimiento
+                if (Movimiento == KEY_UP and NuevoMovimiento == KEY_DOWN):
+                    NuevoMovimiento = Movimiento
+                if (Movimiento == KEY_DOWN and NuevoMovimiento == KEY_UP):
+                    NuevoMovimiento = Movimiento
+                if (Movimiento == KEY_RIGHT and NuevoMovimiento == KEY_LEFT):
+                    NuevoMovimiento = Movimiento
+                if (Movimiento == KEY_LEFT and NuevoMovimiento == KEY_RIGHT):
+                    NuevoMovimiento = Movimiento
 
+                if (NuevoMovimiento is not -1):
+                    Movimiento = NuevoMovimiento
+                # Borrado
+                for i in range(ListaSerpienet.Tamaño() + 1):
+                    Pos_yb = ListaSerpienet.Obtener_Pos_y(i)
+                    Pos_xb = ListaSerpienet.Obtener_Pos_x(i)
+                    window.addch(Pos_yb, Pos_xb, ' ')  # Es el que borra
+                # Fin Borrado
+                # Movimientos
+                if Movimiento == KEY_RIGHT:
+                    Pos_x = Pos_x + 1
+                    ListaSerpienet.ActualizarPos_A(Pos_x, Pos_y)
+                elif Movimiento == KEY_LEFT:
+                    Pos_x = Pos_x - 1
+                    ListaSerpienet.ActualizarPos_A(Pos_x, Pos_y)
+                elif Movimiento == KEY_UP:
+                    Pos_y = Pos_y - 1
+                    ListaSerpienet.ActualizarPos_A(Pos_x, Pos_y)
+                elif Movimiento == KEY_DOWN:
+                    Pos_y = Pos_y + 1
+                    ListaSerpienet.ActualizarPos_A(Pos_x, Pos_y)
+                elif Movimiento == 49:
+                    newLista = ListaDoblementeEnlazada_S()
+                    # prueba de invertir lista
+                    for i in range(ListaSerpienet.Tamaño() + 1):
+                        Pos_yb = ListaSerpienet.Obtener_Pos_y(i)
+                        Pos_xb = ListaSerpienet.Obtener_Pos_x(i)
+                        newLista.ParaTemporal(Pos_xb, Pos_yb)
+                    ListaSerpienet.Empezar_Nuevo()
+                    for i in range(newLista.Tamaño() + 1):
+                        Pos_yb = newLista.Obtener_Pos_y(i)
+                        Pos_xb = newLista.Obtener_Pos_x(i)
+                        ListaSerpienet.Insertar_Final(Pos_xb, Pos_yb)
+                    # FIN DE INVERTIR LISTA
+                    # MOVIMIENTO DE INVERSION
+                    if (Movimiento_Anterior == KEY_UP):
+                        Movimiento = KEY_DOWN
+                    if (Movimiento_Anterior == KEY_LEFT):
+                        Movimiento = KEY_RIGHT
+                    if (Movimiento_Anterior == KEY_DOWN):
+                        Movimiento = KEY_UP
+                    if (Movimiento_Anterior == KEY_RIGHT):
+                        Movimiento = KEY_LEFT
 
+                # si toca un bocadillo
+                if (Pos_x == PosBocadillo_x and Pos_y == PosBocadillo_y):
+                    if (EleccionBocadillo == 0 or EleccionBocadillo == 1):
+                        # realiza un push
+                        Puntuacion += 1
+                        ListaSerpienet.Insertar_Final(PosBocadillo_x, PosBocadillo_y)
+                        Pila_Bocad.Insertar(PosBocadillo_x, PosBocadillo_y)
+                    else:
+                        if (ListaSerpienet.size > 2):
+                            ListaSerpienet.Eliminar()
+                            Puntuacion -= 1
+                        Pila_Bocad.Eliminar()
+                    ExisteBocadillo = 0
 
-            if (NuevoMovimiento is not -1):
-                Movimiento = NuevoMovimiento
-            # Borrado
-            for i in range(ListaSerpienet.Tamaño() + 1):
-                Pos_yb = ListaSerpienet.Obtener_Pos_y(i)
-                Pos_xb = ListaSerpienet.Obtener_Pos_x(i)
-                window.addch(Pos_yb, Pos_xb, ' ')  # Es el que borra
-            # Fin Borrado
-            # Movimientos
-            if Movimiento == KEY_RIGHT:
-                Pos_x = Pos_x + 1
-                ListaSerpienet.ActualizarPos_A(Pos_x, Pos_y)
-            elif Movimiento == KEY_LEFT:
-                Pos_x = Pos_x - 1
-                ListaSerpienet.ActualizarPos_A(Pos_x, Pos_y)
-            elif Movimiento == KEY_UP:
-                Pos_y = Pos_y - 1
-                ListaSerpienet.ActualizarPos_A(Pos_x, Pos_y)
-            elif Movimiento == KEY_DOWN:
-                Pos_y = Pos_y + 1
-                ListaSerpienet.ActualizarPos_A(Pos_x, Pos_y)
-            elif Movimiento ==49:
-                print("Entro")
+                    #Pausa del Juego
+                    # impresion de Gusano
+                for i in range(ListaSerpienet.Tamaño() + 1):
+                    Pos_yb = ListaSerpienet.Obtener_Pos_y(i)
+                    Pos_xb = ListaSerpienet.Obtener_Pos_x(i)
+                    window.addch(Pos_yb, Pos_xb, '#')
 
+                # Comprobacion si topa con si misma
+                for i in range(1, ListaSerpienet.Tamaño()):
+                    Pos_yb = ListaSerpienet.Obtener_Pos_y(i)
+                    Pos_xb = ListaSerpienet.Obtener_Pos_x(i)
+                    if (Pos_x == Pos_xb and Pos_y == Pos_yb):
+                        window.clear()
+                        window.addstr(7, 25, "FIN DEL JUEGO")
+                        window.addstr(9, 25, "Presione DELETE para salir")
+                        Movimiento = 32
 
-
-            # si toca un bocadillo
-            if (Pos_x == PosBocadillo_x and Pos_y == PosBocadillo_y):
-                if (EleccionBocadillo == 0 or EleccionBocadillo==1):
-                    # realiza un push
-                    Puntuacion += 1
-                    ListaSerpienet.Insertar_Final(PosBocadillo_x, PosBocadillo_y)
-                    Pila_Bocad.Insertar(PosBocadillo_x, PosBocadillo_y)
-                else:
-                    if (ListaSerpienet.size > 2):
-                        ListaSerpienet.Eliminar()
-                        Puntuacion -= 1
-                    Pila_Bocad.Eliminar()
-                ExisteBocadillo = 0
-
-
-                # impresion de Gusano
-            for i in range(ListaSerpienet.Tamaño() + 1):
-                Pos_yb = ListaSerpienet.Obtener_Pos_y(i)
-                Pos_xb = ListaSerpienet.Obtener_Pos_x(i)
-                window.addch(Pos_yb, Pos_xb, '#')
-
-
-
-            #Pausar el juego
-
-
-            #Comprobacion si topa con si misma
-            for i in range(1,ListaSerpienet.Tamaño()):
-                Pos_yb = ListaSerpienet.Obtener_Pos_y(i)
-                Pos_xb = ListaSerpienet.Obtener_Pos_x(i)
-                if(Pos_x==Pos_xb and Pos_y==Pos_yb):
+                # Fin de Impresion de Gusano
+                Pintado_Titulo_Tablero(window, str(Puntuacion), UsuarioSeleccionado)
+                if (Puntuacion == 15):
+                    velocidad_tiempo = 60
+                    Pila_Bocad.Iniciar_Nuevo()
+                if (Puntuacion == 20):
+                    velocidad_tiempo = 40
+                    Pila_Bocad.Iniciar_Nuevo()
+                if (Puntuacion == 40):
+                    velocidad_tiempo = 20
+                    Pila_Bocad.Iniciar_Nuevo()
+                if (Puntuacion == 60):
                     window.clear()
-                    window.addstr(7, 25, "FIN DEL JUEGO")
+                    window.addstr(7, 25, "HAS GANADO")
                     window.addstr(9, 25, "Presione DELETE para salir")
-                    Movimiento=32
+                    Movimiento = 32
 
-            # Fin de Impresion de Gusano
-            Pintado_Titulo_Tablero(window, str(Puntuacion), UsuarioSeleccionado)
-            if(Puntuacion==15):
-                velocidad_tiempo=60
-                Pila_Bocad.Iniciar_Nuevo()
-            if (Puntuacion == 20):
-                velocidad_tiempo = 40
-                Pila_Bocad.Iniciar_Nuevo()
+            #Fin de segundo while
+            window.clear()
+            window.addstr(7, 25, "JUEGO PAUSADO")
+            window.addstr(8, 25, "1. Continuar")
+            window.addstr(9, 25, "2. Generar Reporte Score")
+            window.addstr(10, 25, "3. Generar Reporte Snake")
+            window.addstr(11, 25, "Presione DELETE para salir")
+            OpcionPausa = window.getch()
+            if (OpcionPausa is not -1):
+                if (OpcionPausa == 49):
+                    ExisteBocadillo = 0
+                    window.clear()
+                    Movimiento = Movimiento_Anterior
+                if (OpcionPausa == 50):
+                    window.clear()
+                    Pila_Bocad.Graficar()
+                if (OpcionPausa == 51):
+                    window.clear()
+                    ListaSerpienet.Graficar()
+                if (OpcionPausa == 8):
+                    Pausa_del_Juego=1
 
         # Fin de Inicio de Juego
-        Espera_Salir(window)
         Fila_P.Insertar(UsuarioSeleccionado, Puntuacion)
         UsuarioSeleccionado = ""
         ExisteBocadillo=0
         Pintado_Menu(window)
         opcion = 0
+        Pausa_del_Juego=0
 
 
     elif(opcion==50):#opcion 2
@@ -278,34 +319,30 @@ while opcion==0:
 
 
     elif (opcion == 52):  # opcion 4
-        Pintado_Titulo(window, " REPORTS ")
-        window.addstr(7, 21, '1. SNAKE REPORT')
-        window.addstr(8, 21, '2. SCORE REPORT')
-        window.addstr(9, 21, '3. SCOREBOARD REPORT')
-        window.addstr(10, 21, '4. USERS REPORT')
+        while(OpcionReportes!=8):
+            Pintado_Titulo(window, " REPORTS ")
+            window.addstr(7, 21, '1. SNAKE REPORT')
+            window.addstr(8, 21, '2. SCORE REPORT')
+            window.addstr(9, 21, '3. SCOREBOARD REPORT')
+            window.addstr(10, 21, '4. USERS REPORT')
 
-        OpcionReportes=window.getch()
-        if(OpcionReportes==49):
-            ListaSerpienet.Graficar()
-            ListaSerpienet.Imprimir()
-            ListaSerpienet.Reversa()
-            ListaSerpienet.Imprimir()
-        elif(OpcionReportes==50):
-            Pila_Bocad.Graficar()
-        elif(OpcionReportes==51):
-            Fila_P.Graficar()
-        elif(OpcionReportes==52):
-            ListaUsuarios.Graficar()
-        else:
-            window.addstr(11, 21, 'Opcion Incorrecta')
-        window.addstr(12, 21, 'Presione DELETE para salir')
+            OpcionReportes = window.getch()
+            if (OpcionReportes == 49):
+                ListaSerpienet.Graficar()
 
+            elif (OpcionReportes == 50):
+                Pila_Bocad.Graficar()
+            elif (OpcionReportes == 51):
+                Fila_P.Graficar()
+            elif (OpcionReportes == 52):
+                ListaUsuarios.Graficar()
+            else:
+                window.addstr(11, 21, 'Opcion Incorrecta')
+            window.addstr(12, 21, 'Presione DELETE para salir')
 
-        #Fin opcion 4
-        Espera_Salir(window)
         Pintado_Menu(window)
         opcion = 0
-
+        #Fin opcion 4
 
 
 
