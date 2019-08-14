@@ -1,0 +1,11 @@
+digraph List { rankdir=LR 
+ size="9,9"
+node[shape=record,style=filled] 
+"NULL" [shape=box] 
+"NULL." [shape=box] 
+ "(52,8)"[label ="{|(52,8)|}"]
+ "(52,9)"[label ="{|(52,9)|}"]
+ "(52,10)"[label ="{|(52,10)|}"]
+ "(52,11)"[label ="{|(52,11)|}"]
+  "(52,8)" ->  "(52,9)" ->  "(52,10)" ->  "(52,11)" -> "NULL"
+ "(52,11)" ->  "(52,10)" ->  "(52,9)" ->  "(52,8)" -> "NULL."}
